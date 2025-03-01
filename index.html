@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dim">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0/themes.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <title>Hulom | Prelim SIA1</title>
+</head>
+
+<body>
+
+    <div class="navbar bg-base-100 shadow-sm">
+        <div class="flex-1">
+            <a class="btn btn-ghost text-xl">Hulom | Prelim SIA1</a>
+        </div>
+        <div class="flex gap-2">
+            <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="Tailwind CSS Navbar component"
+                            src="https://i.scdn.co/image/ab67616d0000b2734198c92ec28483da79c7894d" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li>
+                        <a class="justify-between">
+                            Profile
+                            <span class="badge">New</span>
+                        </a>
+                    </li>
+                    <li><a>Settings</a></li>
+                    <li><a>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="sm:p-4 p-2">
+        <button class="btn btn-primary" onclick="addModal.showModal()">
+            <i class="fa-solid fa-person"></i>
+            Add Student
+        </button>
+    </div>
+
+    <dialog id="addModal" class="modal">
+        <form id="addForm">
+            <div class="modal-box">
+                <div class="flex gap-2 flex-wrap">
+                    <div class="flex-1">
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">First Name</legend>
+                            <input type="text" class="input" placeholder="Type here" id="addFirstname" required />
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Email</legend>
+                            <input type="email" class="input" placeholder="Type here" id="addEmail" required />
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Course</legend>
+                            <input type="text" class="input" placeholder="Type here" id="addCourse" required />
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Birthdate</legend>
+                            <input type="date" class="input" placeholder="Type here" id="addBday" required />
+                        </fieldset>
+                    </div>
+                    <div class="flex-1">
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Last Name</legend>
+                            <input type="text" class="input" placeholder="Type here" id="addLastname" required />
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Gender</legend>
+                            <select class="select" id="addGender" required>
+                                <option disabled>Select Gender</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Address</legend>
+                            <input type="text" class="input" placeholder="Type here" id="addAddress" required />
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Profile</legend>
+                            <input type="file" class="input" id="addProfile" required />
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="modal-action">
+                    <button class="btn">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="m-4">
+        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+            <table class="table">
+                <!-- head -->
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th></th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Course</th>
+                        <th>Address</th>
+                        <th>Age</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <template id="row_tamplate">
+                        <tr>
+                            <td id="trId">1</td>
+                            <td>
+                                <div class="avatar">
+                                    <div class="w-8 rounded-full">
+                                        <img alt="img" id="tdImg" />
+                                    </div>
+                                </div>
+                            </td>
+                            <td id="trFname"></td>
+                            <td id="trLname"></td>
+                            <td id="trEmail"></td>
+                            <td id="trGender"></td>
+                            <td id="trCourse"></td>
+                            <td id="trAddress"></td>
+                            <td id="trAge"></td>
+                            <td id="trActiob">
+                                <button id="editBtn" class="btn btn-accent btn-sm">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button id="deleteBtn" class="btn btn-error btn-sm">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+        integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
