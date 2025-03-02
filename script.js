@@ -1,6 +1,7 @@
 const tempImg = `https://i.scdn.co/image/ab67616d0000b2734198c92ec28483da79c7894d`
 const rowTemplate = document.querySelector('#row_tamplate');
 const tableBody = document.querySelector("#tableBody");
+let toEditStudentId = null;
 
 function calculateAge(birthdate) {
     const birthDate = new Date(birthdate);
@@ -38,6 +39,18 @@ function getAllStudents() {
                 clone.querySelector("#trCourse").innerHTML = student.course;
                 clone.querySelector("#trAddress").innerHTML = student.user_address;
                 clone.querySelector("#trAge").innerHTML = calculateAge(student.birthdate);
+                clone.querySelector("#editBtn").addEventListener('click', () => {
+                    setEditModal(
+                        student.student_id,
+                        student.first_name,
+                        student.email,
+                        student.course,
+                        student.birthdate,
+                        student.last_name,
+                        student.gender,
+                        student.user_address,
+                    )
+                })
                 clone.querySelector('#deleteBtn').addEventListener('click', () => deleteStudent(student.student_id));
 
                 tableBody.appendChild(clone);
@@ -46,6 +59,21 @@ function getAllStudents() {
         } else {
             alert(responseData.msg);
         }
+    })
+}
+
+function getStudentById(student_id) {
+    $.ajax({
+        url: 'backend.php',
+        type: 'POST',
+        data: {
+            action: 'get_student_by_id',
+            student_id
+        }
+    }).done(function (response) {
+        const responseData = JSON.parse(response);
+        const student = responseData.data;
+        console.log(JSON.stringify(student, null, 2));
     })
 }
 
@@ -68,6 +96,56 @@ function addStudent() {
             type: 'POST',
             data: {
                 action: 'add_student',
+                ...formData
+            }
+        }).done(function (response) {
+            const responseData = JSON.parse(response);
+            if (responseData.status == 200) {
+                alert(responseData.msg);
+                location.reload();
+            } else {
+                alert(responseData.msg);
+            }
+        })
+    });
+}
+
+function setEditModal(student_id, editFirstname, editEmail, editCourse, editBday, editLastname, editGender, editAddress) {
+    document.getElementById("editModal").showModal();
+    toEditStudentId = student_id;
+    $('#editFirstname').val(editFirstname)
+    $('#editEmail').val(editEmail)
+    $('#editCourse').val(editCourse)
+    $('#editBday').val(editBday)
+    $('#editLastname').val(editLastname)
+    $('#editGender').val(editGender)
+    $('#editAddress').val(editAddress)
+}
+
+function updateStudent() {
+    $('#editForm').submit(function (e) {
+        e.preventDefault();
+        let formData = {
+            firstname: $('#editFirstname').val(),
+            email: $('#editEmail').val(),
+            course: $('#editCourse').val(),
+            birthdate: $('#editBday').val(),
+            lastname: $('#editLastname').val(),
+            gender: $('#editGender').val(),
+            address: $('#editAddress').val()
+        };
+
+        let profileImage = $('#editProfile').val();
+        if (profileImage) {
+            formData.profileImage = profileImage;
+        }
+
+        $.ajax({
+            url: "backend.php",
+            type: "POST",
+            data: {
+                action: "update_student_by_id",
+                student_id: toEditStudentId,
                 ...formData
             }
         }).done(function (response) {
@@ -105,6 +183,8 @@ function main() {
     getAllStudents();
 
     addStudent();
+
+    updateStudent();
 }
 
 $(document).ready(main)

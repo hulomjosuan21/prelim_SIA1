@@ -44,6 +44,24 @@ class StudentBackendService
         }
     }
 
+    public function getStudentById($student_id)
+    {
+        try {
+            $query = "SELECT * FROM {$this->tableName} WHERE student_id = ?";
+            $statement = $this->pdo->prepare($query);
+            $statement->execute([$student_id]);
+            $student = $statement->fetch();
+
+            if ($student) {
+                $this->response(200, $student, null);
+            } else {
+                $this->response(404, null, 'Student not found!');
+            }
+        } catch (PDOException $e) {
+            $this->response(500, null, $e->getMessage());
+        }
+    }
+
     public function addStudent($first_name, $last_name, $email, $gender, $course, $bday, $address, $profile)
     {
         try {
@@ -55,6 +73,23 @@ class StudentBackendService
                 $this->response(200, null, 'Student added successfully!');
             } else {
                 $this->response(404, null, 'Failed to add student!');
+            }
+        } catch (PDOException $e) {
+            $this->response(500, null, $e->getMessage());
+        }
+    }
+
+    public function updateStudent($student_id, $first_name, $last_name, $email, $gender, $course, $bday, $address, $profile)
+    {
+        try {
+            $query = "UPDATE {$this->tableName} SET first_name=?, last_name=?, email=?, gender=?, course=?, birthdate=?, user_address=?, profile=? WHERE student_id=?";
+            $statement = $this->pdo->prepare($query);
+            $statement->execute([$first_name, $last_name, $email, $gender, $course, $bday, $address, $profile, $student_id]);
+
+            if ($statement->rowCount() > 0) {
+                $this->response(200, null, 'Student updated successfully!');
+            } else {
+                $this->response(404, null, 'Failed to update student!');
             }
         } catch (PDOException $e) {
             $this->response(500, null, $e->getMessage());
@@ -87,6 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'get_all_students':
             $db->getAllStudents();
             break;
+        case 'get_student_by_id':
+            $db->getStudentById($_POST['student_id']);
+            break;
         case 'add_student':
             $db->addStudent(
                 $_POST['firstname'],
@@ -97,6 +135,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_POST['birthdate'],
                 $_POST['address'],
                 $_POST['profileImage']
+            );
+            break;
+        case 'update_student_by_id':
+            $db->updateStudent(
+                $_POST['student_id'],
+                $_POST['firstname'],
+                $_POST['lastname'],
+                $_POST['email'],
+                $_POST['gender'],
+                $_POST['course'],
+                $_POST['birthdate'],
+                $_POST['address'],
+                $_POST['profileImage'] ?? null
             );
             break;
         case 'delete_student':
